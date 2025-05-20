@@ -52,11 +52,10 @@
 
 		<!-- Driver R2DBC para MySQL -->
 		<dependency>
-			<groupId>dev.miku</groupId>
+			<groupId>io.asyncer</groupId>
 			<artifactId>r2dbc-mysql</artifactId>
-			<version>0.8.2.RELEASE</version>
+			<version>1.0.2</version>
 		</dependency>
-
 		<!-- Swagger/OpenAPI para WebFlux -->
 		<dependency>
 			<groupId>org.springdoc</groupId>

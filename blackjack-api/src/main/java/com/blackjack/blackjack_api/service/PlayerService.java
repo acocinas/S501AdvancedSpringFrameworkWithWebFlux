@@ -1,6 +1,6 @@
 package com.blackjack.blackjack_api.service;
 
-import com.blackjack.blackjack_api.interfaces.repository.PlayerRepository;
+import com.blackjack.blackjack_api.interfaces.repository.mysql.PlayerRepository;
 import com.blackjack.blackjack_api.model.Player;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -19,6 +19,7 @@ public class PlayerService {
     }
 
     public Mono<Player> createPlayer(Player player) {
+        player.setId(null);
         return playerRepository.save(player);
     }
 

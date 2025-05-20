@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-blackjack
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Coci20094886.
+      MYSQL_DATABASE: blackjack_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - blackjack-net
+
+volumes:
+  mysql-data:
+
+networks:
+  blackjack-net:
+
