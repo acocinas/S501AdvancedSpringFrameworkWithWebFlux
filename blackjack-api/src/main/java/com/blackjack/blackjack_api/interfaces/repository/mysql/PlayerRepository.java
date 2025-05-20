@@ -1,4 +1,4 @@
-package com.blackjack.blackjack_api.interfaces.repository;
+package com.blackjack.blackjack_api.interfaces.repository.mysql;
 
 import com.blackjack.blackjack_api.model.Player;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
