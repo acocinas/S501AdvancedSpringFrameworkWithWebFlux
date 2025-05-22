@@ -19,6 +19,10 @@ public class PlayerController {
     public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }
+    @GetMapping
+    public Flux<Player> getAllPlayers() {
+        return playerService.getAllPlayers();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -31,10 +35,6 @@ public class PlayerController {
         return playerService.getPlayerById(id);
     }
 
-    @GetMapping
-    public Flux<Player> getAllPlayers() {
-        return playerService.getAllPlayers();
-    }
 
     @PutMapping("/{id}")
     public Mono<Player> updatePlayer(@PathVariable Long id, @RequestBody Player player) {
@@ -44,6 +44,6 @@ public class PlayerController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deletePlayer(@PathVariable Long id) {
-        return playerService.deletePlayer(id);
+        return playerService.deletePlayerById(id);
     }
 }

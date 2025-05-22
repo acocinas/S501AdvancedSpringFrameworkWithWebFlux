@@ -1,5 +1,6 @@
 package com.blackjack.blackjack_api.service;
 
+import com.blackjack.blackjack_api.exception.PlayerNotFoundException;
 import com.blackjack.blackjack_api.interfaces.repository.mysql.PlayerRepository;
 import com.blackjack.blackjack_api.model.Player;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,13 @@ public class PlayerService {
     }
 
     public Mono<Player> getPlayerById(Long id) {
-        return playerRepository.findById(id);
+        return playerRepository.findById(id)
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException(id)));
     }
 
     public Mono<Player> updatePlayer(Long id, Player player) {
         return playerRepository.findById(id)
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException(id)))
                 .flatMap(existingPlayer -> {
                     existingPlayer.setName(player.getName());
                     existingPlayer.setScore(player.getScore());
@@ -36,7 +39,9 @@ public class PlayerService {
                 });
     }
 
-    public Mono<Void> deletePlayer(Long id) {
-        return playerRepository.deleteById(id);
+    public Mono<Void> deletePlayerById(Long id) {
+        return playerRepository.findById(id)
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException(id)))
+                .flatMap(existingPlayer -> playerRepository.deleteById(id));
     }
 }
