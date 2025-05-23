@@ -3,9 +3,7 @@ package com.blackjack.blackjack_api.model;
 import com.blackjack.blackjack_api.enums.Rank;
 import com.blackjack.blackjack_api.enums.Suit;
 import lombok.Getter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Getter
 public class Deck {
