@@ -1,13 +1,13 @@
 package com.blackjack.blackjack_api.model;
 
 import com.blackjack.blackjack_api.enums.Rank;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.*;
 
-@Getter
+@Data
 public class Hand {
-    private final List<Card> cards;
+    private List<Card> cards;
     private boolean stood;
 
     public Hand(){

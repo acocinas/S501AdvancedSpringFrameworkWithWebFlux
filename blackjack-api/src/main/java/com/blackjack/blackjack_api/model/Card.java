@@ -4,12 +4,13 @@ import com.blackjack.blackjack_api.enums.Rank;
 import com.blackjack.blackjack_api.enums.Suit;
 import lombok.*;
 
-@Getter
+@Data
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class Card {
-    private final Suit suit;
-    private final Rank rank;
+    private Suit suit;
+    private Rank rank;
 
     public int getValue() {
         return switch (rank){

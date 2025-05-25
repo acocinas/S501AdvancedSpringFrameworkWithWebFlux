@@ -1,26 +1,30 @@
-package com.blackjack.blackjack_api.service;
+package com.blackjack.blackjack_api.model;
 
 import com.blackjack.blackjack_api.enums.GameStatus;
-import com.blackjack.blackjack_api.model.Deck;
-import com.blackjack.blackjack_api.model.Hand;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
 @Getter
+@Setter
+@Document(collection = "games")
 public class Game {
 
-    private final UUID  id;
-    private final Deck deck;
-    private final Hand playerHand;
-    private final Hand dealerHand;
+    @Id
+    private String id;
+    private String playerName;
+    private Deck deck;
+    private Hand playerHand;
+    private Hand dealerHand;
     private GameStatus status;
     private boolean playerTurn;
 
     public Game() {
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
         this.deck = new Deck();
-
         this.playerHand = new Hand();
         this.dealerHand = new Hand();
 
@@ -31,6 +35,11 @@ public class Game {
 
         this.status = GameStatus.IN_PROGRESS;
         this.playerTurn = true;
+    }
+
+    public Game(String playerName) {
+        this();
+        this.playerName = playerName;
     }
 
     private void ensurePlayerCanPlay() {

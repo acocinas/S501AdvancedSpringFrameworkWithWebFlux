@@ -8,11 +8,10 @@ import java.util.*;
 @Getter
 public class Deck {
 
-    private final List<Card> cards;
+    private List<Card> cards;
 
     public Deck() {
         this.cards = new ArrayList<>();
-
         for (Suit suit : Suit.values()) {
             for (Rank rank : Rank.values()) {
                 cards.add(new Card(suit, rank));
