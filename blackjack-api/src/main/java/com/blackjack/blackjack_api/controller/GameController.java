@@ -1,7 +1,7 @@
 package com.blackjack.blackjack_api.controller;
 
+import com.blackjack.blackjack_api.dto.GameResponseDTO;
 import com.blackjack.blackjack_api.interfaces.service.GameService;
-import com.blackjack.blackjack_api.model.Game;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +16,22 @@ public class GameController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Game> createGame(@RequestParam Long playerId) {
+    public Mono<GameResponseDTO> createGame(@RequestParam Long playerId) {
         return gameService.createGame(playerId);
     }
 
     @GetMapping("/{gameId}")
-    public Mono<Game> getGameById(@PathVariable String gameId) {
+    public Mono<GameResponseDTO> getGameById(@PathVariable String gameId) {
         return gameService.getGameById(gameId);
     }
 
     @PostMapping("/{gameId}/play/hit")
-    public Mono<Game> playerHit(@PathVariable String gameId) {
+    public Mono<GameResponseDTO> playerHit(@PathVariable String gameId) {
         return gameService.playerHit(gameId);
     }
 
     @PostMapping("/{gameId}/play/stand")
-    public Mono<Game> playerStand(@PathVariable String gameId) {
+    public Mono<GameResponseDTO> playerStand(@PathVariable String gameId) {
         return gameService.playerStand(gameId);
     }
 
