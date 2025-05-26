@@ -1,6 +1,7 @@
 package com.blackjack.blackjack_api.exception.handler;
 
 import com.blackjack.blackjack_api.exception.GameNotFoundException;
+import com.blackjack.blackjack_api.exception.InvalidActionException;
 import com.blackjack.blackjack_api.exception.InvalidPlayException;
 import com.blackjack.blackjack_api.exception.PlayerNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +38,11 @@ public class GlobalExceptionHandler {
     public Mono<ErrorResponse> handleException(Exception ex) {
         log.debug("Unhandled exception caught in GlobalExceptionHandler", ex);
         return Mono.just(new ErrorResponse("INTERNAL_SERVER_ERROR", "Error inesperado"));
+    }
+
+    @ExceptionHandler(InvalidActionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Mono<ErrorResponse> handleInvalidActionException(InvalidActionException ex) {
+        return Mono.just(new ErrorResponse("INVALID_ACTION", ex.getMessage()));
     }
 }

@@ -115,11 +115,13 @@ public class GameServiceImplement implements GameService {
                         .map(player ->{
                             long totalGames = gamesList.size();
                             long wins = gamesList.stream()
-                                    .filter(game -> game.getStatus()== GameStatus.PLAYER_WIN)
+                                    .filter(game -> game.getStatus()== GameStatus.PLAYER_WIN
+                                    || game.getStatus() == GameStatus.DEALER_BUSTED)
                                             .count();
                             long losses = gamesList.stream()
                                     .filter(game ->
-                                            game.getStatus() == GameStatus.DEALER_WIN || game.getStatus() == GameStatus.PLAYER_BUSTED)
+                                            game.getStatus() == GameStatus.DEALER_WIN
+                                                    || game.getStatus() == GameStatus.PLAYER_BUSTED)
                                     .count();
                             long draws = gamesList.stream()
                                     .filter(game -> game.getStatus() == GameStatus.DRAW)

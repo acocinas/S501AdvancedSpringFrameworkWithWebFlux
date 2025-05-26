@@ -1,6 +1,8 @@
 package com.blackjack.blackjack_api.model;
 
 import com.blackjack.blackjack_api.enums.GameStatus;
+import com.blackjack.blackjack_api.exception.InvalidActionException;
+import com.blackjack.blackjack_api.exception.InvalidPlayException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -44,7 +46,7 @@ public class Game {
 
     private void ensurePlayerCanPlay() {
         if (status != GameStatus.IN_PROGRESS || !playerTurn) {
-            throw new IllegalStateException(
+            throw new InvalidPlayException(
                     "Cannot play now: status=" + status + ", playerTurn=" + playerTurn
             );
         }
@@ -52,7 +54,7 @@ public class Game {
     public void playerHit() {
         ensurePlayerCanPlay();
         if(!playerHand.canHit()){
-            throw new IllegalStateException("Player cannot hit" + playerHand);
+            throw new InvalidActionException("Player cannot hit" + playerHand);
         }
         playerHand.addCard(deck.drawCard());
         if(playerHand.isBusted()) {
