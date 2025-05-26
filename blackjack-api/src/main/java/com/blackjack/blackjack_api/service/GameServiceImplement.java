@@ -106,6 +106,7 @@ public class GameServiceImplement implements GameService {
         @Override
     public Flux<RankingDTO> getPlayerRanking() {
         return gameRepository.findAll()
+                .filter(game -> game.getPlayerId() != null)
                 .groupBy(Game::getPlayerId)
                 .flatMap(groupedFlux ->
                         groupedFlux.collectList()

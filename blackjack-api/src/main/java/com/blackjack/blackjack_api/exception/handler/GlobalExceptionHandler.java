@@ -3,12 +3,14 @@ package com.blackjack.blackjack_api.exception.handler;
 import com.blackjack.blackjack_api.exception.GameNotFoundException;
 import com.blackjack.blackjack_api.exception.InvalidPlayException;
 import com.blackjack.blackjack_api.exception.PlayerNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -33,6 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Mono<ErrorResponse> handleException(Exception ex) {
+        log.debug("Unhandled exception caught in GlobalExceptionHandler", ex);
         return Mono.just(new ErrorResponse("INTERNAL_SERVER_ERROR", "Error inesperado"));
     }
 }

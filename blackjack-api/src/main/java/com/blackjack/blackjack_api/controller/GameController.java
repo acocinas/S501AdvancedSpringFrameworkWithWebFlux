@@ -1,10 +1,12 @@
 package com.blackjack.blackjack_api.controller;
 
 import com.blackjack.blackjack_api.dto.GameResponseDTO;
+import com.blackjack.blackjack_api.dto.RankingDTO;
 import com.blackjack.blackjack_api.interfaces.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -39,5 +41,10 @@ public class GameController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteGame(@PathVariable String gameId) {
         return gameService.deleteGame(gameId);
+    }
+
+    @GetMapping("/ranking")
+    public Flux<RankingDTO> getPlayerRanking() {
+        return gameService.getPlayerRanking();
     }
 }
