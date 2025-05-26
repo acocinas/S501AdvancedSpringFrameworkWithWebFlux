@@ -3,6 +3,8 @@ package com.blackjack.blackjack_api.service;
 import com.blackjack.blackjack_api.dto.GameMapper;
 import com.blackjack.blackjack_api.dto.GameResponseDTO;
 import com.blackjack.blackjack_api.dto.PlayerDTO;
+import com.blackjack.blackjack_api.dto.RankingDTO;
+import com.blackjack.blackjack_api.enums.GameStatus;
 import com.blackjack.blackjack_api.exception.GameNotFoundException;
 import com.blackjack.blackjack_api.exception.InvalidPlayException;
 import com.blackjack.blackjack_api.exception.PlayerNotFoundException;
@@ -10,8 +12,11 @@ import com.blackjack.blackjack_api.interfaces.repository.mongo.GameRepository;
 import com.blackjack.blackjack_api.interfaces.repository.mysql.PlayerRepository;
 import com.blackjack.blackjack_api.interfaces.service.GameService;
 import com.blackjack.blackjack_api.model.Game;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 
 @Service
 public class GameServiceImplement implements GameService {
@@ -19,6 +24,7 @@ public class GameServiceImplement implements GameService {
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
 
+    @Autowired
     public GameServiceImplement(GameRepository gameRepository, PlayerRepository playerRepository) {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
@@ -96,4 +102,36 @@ public class GameServiceImplement implements GameService {
         public Mono<Void> deleteGame (String gameId){
             return gameRepository.deleteById(gameId);
         }
+
+        @Override
+    public Flux<RankingDTO> getPlayerRanking() {
+        return gameRepository.findAll()
+                .groupBy(Game::getPlayerId)
+                .flatMap(groupedFlux ->
+                        groupedFlux.collectList()
+                        .flatMap(gamesList ->
+                                playerRepository.findById(groupedFlux.key())
+                        .map(player ->{
+                            long totalGames = gamesList.size();
+                            long wins = gamesList.stream()
+                                    .filter(game -> game.getStatus()== GameStatus.PLAYER_WIN)
+                                            .count();
+                            long losses = gamesList.stream()
+                                    .filter(game ->
+                                            game.getStatus() == GameStatus.DEALER_WIN || game.getStatus() == GameStatus.PLAYER_BUSTED)
+                                    .count();
+                            long draws = gamesList.stream()
+                                    .filter(game -> game.getStatus() == GameStatus.DRAW)
+                                    .count();
+                            double winRate = totalGames > 0 ? (wins * 100.0 / totalGames) : 0.0;
+                            return new RankingDTO(
+                                    player.getId(),
+                                    player.getName(),
+                                    totalGames,
+                                    wins,
+                                    losses,
+                                    draws,
+                                    winRate);
+                        })));
     }
+}
