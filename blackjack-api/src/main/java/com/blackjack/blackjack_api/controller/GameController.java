@@ -16,8 +16,8 @@ public class GameController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Game> createGame(@RequestParam String playerName) {
-        return gameService.createGame(playerName);
+    public Mono<Game> createGame(@RequestParam Long playerId) {
+        return gameService.createGame(playerId);
     }
 
     @GetMapping("/{gameId}")

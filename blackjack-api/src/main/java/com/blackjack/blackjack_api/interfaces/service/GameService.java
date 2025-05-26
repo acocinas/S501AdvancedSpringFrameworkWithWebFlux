@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 public interface GameService {
 
-    Mono<Game> createGame(String playerName);
+    Mono<Game> createGame( Long playerId);
 
     Mono<Game> getGameById(String gameId);
 

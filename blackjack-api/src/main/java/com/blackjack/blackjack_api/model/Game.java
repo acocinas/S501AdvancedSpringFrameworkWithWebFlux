@@ -15,7 +15,7 @@ public class Game {
 
     @Id
     private String id;
-    private String playerName;
+    private Long playerId;
     private Deck deck;
     private Hand playerHand;
     private Hand dealerHand;
@@ -37,9 +37,9 @@ public class Game {
         this.playerTurn = true;
     }
 
-    public Game(String playerName) {
+    public Game(Long playerId) {
         this();
-        this.playerName = playerName;
+        this.playerId = playerId;
     }
 
     private void ensurePlayerCanPlay() {
