@@ -21,6 +21,7 @@ public class PlayerService {
 
     public Mono<Player> createPlayer(Player player) {
         player.setId(null);
+        if (player.getBalance() == null) player.setBalance(100);
         return playerRepository.save(player);
     }
 

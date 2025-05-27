@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 
 public interface GameService {
 
-    Mono<GameResponseDTO> createGame(Long playerId);
+    Mono<GameResponseDTO> createGame(Long playerId, int bet);
 
     Mono<GameResponseDTO> getGameById(String gameId);
 

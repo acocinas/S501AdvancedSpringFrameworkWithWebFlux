@@ -31,11 +31,20 @@ public class GameServiceImplement implements GameService {
     }
 
     @Override
-    public Mono<GameResponseDTO> createGame(Long playerId) {
+    public Mono<GameResponseDTO> createGame(Long playerId, int bet) {
         return playerRepository.findById(playerId)
                 .switchIfEmpty(Mono.error(new PlayerNotFoundException(playerId)))
                 .flatMap(player -> {
-                    Game game = new Game(player.getId());
+                    if (player.getBalance() == null || player.getBalance() <= 0){
+                        throw new InvalidPlayException("El jugador no tiene suficiente dinero" + player.getBalance());
+                    }
+                    if (bet <= 0) {
+                        throw new InvalidPlayException("La apuesta debe ser mayor a 0");
+                    }
+                    if (bet > player.getBalance()) {
+                        throw new InvalidPlayException("La apuesta es mayor al saldo " + player.getBalance());
+                    }
+                    Game game = new Game(player.getId(),bet);
                     return gameRepository.save(game);
                 })
                 .flatMap(savedGame ->
@@ -44,7 +53,7 @@ public class GameServiceImplement implements GameService {
                             .map(player ->
                                     GameMapper.toDto(
                                             savedGame,
-                                            new PlayerDTO(player.getId(), player.getName()))));
+                                            new PlayerDTO(player.getId(), player.getName(), player.getBalance()))));
                 }
 
         @Override
@@ -57,7 +66,7 @@ public class GameServiceImplement implements GameService {
                                     .map(player ->
                                             GameMapper.toDto(
                                             game,
-                                            new PlayerDTO(player.getId(), player.getName()))));
+                                            new PlayerDTO(player.getId(), player.getName(), player.getBalance()))));
         }
 
         @Override
@@ -68,15 +77,19 @@ public class GameServiceImplement implements GameService {
                         game.playerHit();
                         return gameRepository.save(game);
                     })
-                    .onErrorMap(IllegalStateException.class,
-                            e -> new InvalidPlayException(e.getMessage()))
+                    .flatMap(game -> {
+                        if (game.getStatus() != GameStatus.IN_PROGRESS) {
+                            return settleBet(game).thenReturn(game);
+                        }
+                        return Mono.just(game);
+                    })
                     .flatMap(game ->
                             playerRepository.findById(game.getPlayerId())
                                     .switchIfEmpty(Mono.error(new PlayerNotFoundException(game.getPlayerId())))
                             .map(player ->
                                     GameMapper.toDto(
                                     game,
-                                    new PlayerDTO(player.getId(), player.getName()))));
+                                    new PlayerDTO(player.getId(), player.getName(), player.getBalance()))));
         }
 
         @Override
@@ -87,15 +100,14 @@ public class GameServiceImplement implements GameService {
                         game.playerStand();
                         return gameRepository.save(game);
                     })
-                    .onErrorMap(IllegalStateException.class,
-                            e -> new InvalidPlayException(e.getMessage()))
+                    .flatMap(game -> settleBet(game).thenReturn(game))
                     .flatMap(game ->
                             playerRepository.findById(game.getPlayerId())
                                     .switchIfEmpty(Mono.error(new PlayerNotFoundException(game.getPlayerId())))
                                     .map(player ->
                                             GameMapper.toDto(
                                             game,
-                                            new PlayerDTO(player.getId(), player.getName()))));
+                                            new PlayerDTO(player.getId(), player.getName(), player.getBalance()))));
         }
 
         @Override
@@ -136,5 +148,27 @@ public class GameServiceImplement implements GameService {
                                     draws,
                                     winRate);
                         })));
+    }
+
+    private Mono<Void> settleBet(Game game) {
+        return playerRepository.findById(game.getPlayerId())
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException(game.getPlayerId())))
+                .flatMap(player -> {
+                    int bet = game.getBet();
+                    boolean blackjack = game.isBlackjack();
+
+                    int multiplier;
+                    switch (game.getStatus()) {
+                        case PLAYER_WIN, DEALER_BUSTED ->
+                            multiplier = blackjack ? 3 : 2;
+                        case DRAW ->
+                            multiplier = 1;
+                        default ->
+                            multiplier = 0;
+                    }
+                    int netDelta = (multiplier - 1) * bet;
+                    player.setBalance(player.getBalance() + netDelta);
+                    return playerRepository.save(player);
+                }).then();
     }
 }

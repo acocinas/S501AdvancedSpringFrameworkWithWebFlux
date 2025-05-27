@@ -23,6 +23,7 @@ public class Game {
     private Hand dealerHand;
     private GameStatus status;
     private boolean playerTurn;
+    private int bet;
 
     public Game() {
         this.id = UUID.randomUUID().toString();
@@ -37,24 +38,29 @@ public class Game {
 
         this.status = GameStatus.IN_PROGRESS;
         this.playerTurn = true;
+        this.bet = 0;
     }
 
-    public Game(Long playerId) {
+    public Game(Long playerId, int initialBet) {
         this();
         this.playerId = playerId;
+        if(initialBet <= 0) {
+            throw new InvalidActionException("La apuesta no puede ser 0");
+        }
+        this.bet = initialBet;
     }
 
     private void ensurePlayerCanPlay() {
         if (status != GameStatus.IN_PROGRESS || !playerTurn) {
             throw new InvalidPlayException(
-                    "Cannot play now: status=" + status + ", playerTurn=" + playerTurn
+                    "No puede jugar " + status + ", playerTurn=" + playerTurn
             );
         }
     }
     public void playerHit() {
         ensurePlayerCanPlay();
         if(!playerHand.canHit()){
-            throw new InvalidActionException("Player cannot hit" + playerHand);
+            throw new InvalidActionException("No puede pedir carta" + playerHand);
         }
         playerHand.addCard(deck.drawCard());
         if(playerHand.isBusted()) {
@@ -90,5 +96,9 @@ public class Game {
         }else {
             status = GameStatus.DRAW;
         }
+    }
+
+    public boolean isBlackjack() {
+        return playerHand.isBlackjack();
     }
 }
