@@ -61,7 +61,7 @@ class PlayerServiceTest {
        when(playerRepositoryMock.findById(1L)).thenReturn(Mono.just(player));
        when(playerRepositoryMock.save(any(Player.class))).thenReturn(Mono.just(updatedPlayer));
        StepVerifier.create(playerServiceMock.updatePlayer(1L, updatedPlayer))
-               .expectNextMatches(p -> p.getName().equals("Alfonso") && p.getScore() == 1000)
+               .expectNextMatches(p -> p.getName().equals("Alfonso") && p.getBalance() == 1000)
                .verifyComplete();
     }
 

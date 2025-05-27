@@ -34,7 +34,7 @@ public class PlayerService {
                 .switchIfEmpty(Mono.error(new PlayerNotFoundException(id)))
                 .flatMap(existingPlayer -> {
                     existingPlayer.setName(player.getName());
-                    existingPlayer.setScore(player.getScore());
+                    existingPlayer.setBalance(player.getBalance());
                     return playerRepository.save(existingPlayer);
                 });
     }

@@ -17,6 +17,6 @@ public class Player {
     @Column("name")
     private String name;
 
-    @Column("score")
-    private Integer score;
+    @Column("balance")
+    private Integer balance;
 }
