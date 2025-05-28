@@ -1,31 +1,40 @@
 package com.blackjack.blackjack_api.controller;
 
+import com.blackjack.blackjack_api.dto.CreateGameRequestDTO;
 import com.blackjack.blackjack_api.dto.GameResponseDTO;
 import com.blackjack.blackjack_api.dto.RankingDTO;
 import com.blackjack.blackjack_api.interfaces.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/game")
-@RequiredArgsConstructor
+@Validated
 public class GameController {
 
-    private final GameService gameService;
+    private GameService gameService;
+
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @Operation(summary = "Crea un nuevo juego", description = "Añade un nuevo juego con jugador y apuesta")
     @ApiResponse(responseCode = "201", description = "CREATED successfully")
     @PostMapping("/new")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<GameResponseDTO> createGame(
-            @RequestParam("playerId") Long playerId,
-            @RequestParam("bet") int bet) {
-        return gameService.createGame(playerId, bet);
+    public Mono<ResponseEntity<GameResponseDTO>> createGame(
+            @Valid @RequestBody CreateGameRequestDTO dto) {
+        return gameService.createGame(dto.getPlayerId(), dto.getBet())
+            .map(response ->
+                    ResponseEntity
+                            .status(HttpStatus.CREATED)
+                            .body(response));
     }
 
     @Operation(summary = "Obtiene un juego por su id")
