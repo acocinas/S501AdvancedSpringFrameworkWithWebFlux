@@ -1,0 +1,23 @@
+# Carpetas y archivos de compilación
+target/
+*.jar
+*.war
+
+# Control de versiones
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Documentación y ejemplos
+README.md
+*.md
+application.yml
+
+# IDEs y wrappers
+.idea/
+*.iml
+mvnw
+mvnw.cmd
