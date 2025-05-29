@@ -48,6 +48,18 @@ public class Game {
             throw new InvalidActionException("La apuesta no puede ser 0");
         }
         this.bet = initialBet;
+
+        boolean playerBlackjack = playerHand.isBlackjack();
+        boolean dealerBlackjack = dealerHand.isBlackjack();
+
+        if (playerBlackjack){
+            this.playerTurn = false;
+            if(dealerBlackjack) {
+               this.status = GameStatus.DRAW;
+            } else {
+               this.status = GameStatus.PLAYER_WIN;
+            }
+        }
     }
 
     private void ensurePlayerCanPlay() {
@@ -66,6 +78,9 @@ public class Game {
         if(playerHand.isBusted()) {
             status = GameStatus.PLAYER_BUSTED;
             playerTurn = false;
+        } else if (playerHand.hasTwentyOne()) {
+            playerTurn = false;
+            dealerPlay();
         }
     }
 
@@ -83,7 +98,7 @@ public class Game {
             dealerHand.addCard(deck.drawCard());
         }
         if(dealerHand.isBusted()) {
-            status = GameStatus.DEALER_BUSTED;
+            status = GameStatus.PLAYER_WIN;
             return;
         }
         int dealerValue = dealerHand.calculateValue();

@@ -127,8 +127,7 @@ public class GameServiceImplement implements GameService {
                         .map(player ->{
                             long totalGames = gamesList.size();
                             long wins = gamesList.stream()
-                                    .filter(game -> game.getStatus()== GameStatus.PLAYER_WIN
-                                    || game.getStatus() == GameStatus.DEALER_BUSTED)
+                                    .filter(game -> game.getStatus()== GameStatus.PLAYER_WIN)
                                             .count();
                             long losses = gamesList.stream()
                                     .filter(game ->
@@ -159,7 +158,7 @@ public class GameServiceImplement implements GameService {
 
                     int multiplier;
                     switch (game.getStatus()) {
-                        case PLAYER_WIN, DEALER_BUSTED ->
+                        case PLAYER_WIN ->
                             multiplier = blackjack ? 3 : 2;
                         case DRAW ->
                             multiplier = 1;
