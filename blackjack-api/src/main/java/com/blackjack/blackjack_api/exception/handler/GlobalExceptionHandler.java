@@ -9,7 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
+
+
+import java.util.Optional;
 
 @Slf4j
 @RestControllerAdvice
@@ -44,5 +48,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Mono<ErrorResponse> handleInvalidActionException(InvalidActionException ex) {
         return Mono.just(new ErrorResponse("INVALID_ACTION", ex.getMessage()));
+    }
+
+    @ExceptionHandler(WebExchangeBindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Mono<ErrorResponse> handleWebExchangeBindException(WebExchangeBindException ex) {
+        String errorMessage = ex.getBindingResult().getAllErrors().stream()
+                .map(error -> Optional.ofNullable(error.getDefaultMessage()).orElse("Error de validación"))
+                .findFirst()
+                .orElse("Error de validación");
+        return Mono.just(new ErrorResponse("VALIDATION_ERROR", errorMessage));
     }
 }
