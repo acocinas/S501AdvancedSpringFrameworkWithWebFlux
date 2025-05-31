@@ -26,38 +26,40 @@ public class Game {
     private int bet;
 
     public Game() {
+        // Constructor vacío necesario para deserialización de MongoDB
+    }
+
+    public Game(Long playerId, int initialBet) {
+        if(initialBet <= 0) {
+            throw new InvalidActionException("La apuesta no puede ser 0");
+        }
         this.id = UUID.randomUUID().toString();
         this.deck = new Deck();
         this.playerHand = new Hand();
         this.dealerHand = new Hand();
-
-        playerHand.addCard(deck.drawCard());
-        dealerHand.addCard(deck.drawCard());
-        playerHand.addCard(deck.drawCard());
-        dealerHand.addCard(deck.drawCard());
-
+        this.playerId = playerId;
+        this.bet = initialBet;
         this.status = GameStatus.IN_PROGRESS;
         this.playerTurn = true;
-        this.bet = 0;
     }
 
-    public Game(Long playerId, int initialBet) {
-        this();
-        this.playerId = playerId;
-        if(initialBet <= 0) {
-            throw new InvalidActionException("La apuesta no puede ser 0");
-        }
-        this.bet = initialBet;
+    public void dealInitialCards() {
+        playerHand.addCard(deck.drawCard());
+        dealerHand.addCard(deck.drawCard());
+        playerHand.addCard(deck.drawCard());
+        dealerHand.addCard(deck.drawCard());
+    }
 
+    public void checkInitialBlackjack() {
         boolean playerBlackjack = playerHand.isBlackjack();
         boolean dealerBlackjack = dealerHand.isBlackjack();
 
         if (playerBlackjack){
             this.playerTurn = false;
             if(dealerBlackjack) {
-               this.status = GameStatus.DRAW;
+                this.status = GameStatus.DRAW;
             } else {
-               this.status = GameStatus.PLAYER_WIN;
+                this.status = GameStatus.PLAYER_WIN;
             }
         }
     }

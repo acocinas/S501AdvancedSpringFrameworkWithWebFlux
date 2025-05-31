@@ -45,6 +45,8 @@ public class GameServiceImplement implements GameService {
                         throw new InvalidPlayException("La apuesta es mayor al saldo " + player.getBalance());
                     }
                     Game game = new Game(player.getId(),bet);
+                    game.dealInitialCards();
+                    game.checkInitialBlackjack();
                     return gameRepository.save(game);
                 })
                 .flatMap(savedGame ->

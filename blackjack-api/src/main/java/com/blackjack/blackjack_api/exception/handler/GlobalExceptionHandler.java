@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Mono<ErrorResponse> handleException(Exception ex) {
         log.debug("Unhandled exception caught in GlobalExceptionHandler", ex);
-        return Mono.just(new ErrorResponse("INTERNAL_SERVER_ERROR", "Error inesperado"));
+        return Mono.just(new ErrorResponse("INTERNAL_SERVER_ERROR", ex.getMessage() + " - " + (ex.getCause() != null ? ex.getCause() : "")));
     }
 
     @ExceptionHandler(InvalidActionException.class)
