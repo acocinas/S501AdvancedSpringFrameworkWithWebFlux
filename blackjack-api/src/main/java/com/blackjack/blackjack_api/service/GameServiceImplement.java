@@ -148,7 +148,8 @@ public class GameServiceImplement implements GameService {
                                     losses,
                                     draws,
                                     winRate);
-                        })));
+                        })))
+                .sort((r1, r2) -> Double.compare(r2.getWinRate(), r1.getWinRate()));
     }
 
     private Mono<Void> settleBet(Game game) {
