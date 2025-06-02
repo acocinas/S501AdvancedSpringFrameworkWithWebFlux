@@ -21,7 +21,7 @@ services:
       - mongo_data:/data/db
 
   blackjack-api:
-    build: .
+    image: acocinas/blackjack-api:latest
     restart: always
     ports:
       - "8080:8080"
