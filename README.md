@@ -35,8 +35,11 @@ Global exception handler (GlobalExceptionHandler) for clear responses:
 
 ## 📊 Swagger UI
 
-📍 Access the API via Swagger: `https://blackjack-api-latest.onrender.com/swagger-ui.html`
-[Direct to Swagger](https://blackjack-api-latest.onrender.com/swagger-ui.html)
+📍 Access the API via Swagger once the container is running:
+
+```
+http://localhost:8080/swagger-ui.html
+```
 
 ## 🏅 Player Ranking
 
@@ -51,31 +54,11 @@ Global exception handler (GlobalExceptionHandler) for clear responses:
 
 ## 🐳 Docker Image
 
-Docker Hub Image URL:
-
-```
-docker.io/acocinas/blackjack-api:latest
-```
-
-To pull and run the image locally:
+To build and run the image locally:
 
 ```bash
-docker pull acocinas/blackjack-api:latest
-docker run -p 8080:8080 acocinas/blackjack-api:latest
-```
-
-## 🌐 Render Deployment
-
-Your app is live and accessible at:
-
-```
-https://blackjack-api-latest.onrender.com
-```
-
-Swagger UI available at:
-
-```
-https://blackjack-api-latest.onrender.com/swagger-ui.html
+docker build -t blackjack-api:latest .
+docker run -p 8080:8080 blackjack-api:latest
 ```
 
 <details>
@@ -85,23 +68,16 @@ https://blackjack-api-latest.onrender.com/swagger-ui.html
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `SPRING_R2DBC_URL`           | `r2dbc:mysql://root:@mysql:3306/blackjack_db`                                                                                      |
 | `SPRING_R2DBC_USERNAME`      | `root`                                                                                                                             |
-| `SPRING_R2DBC_PASSWORD`      | *""*                                                                                                               |
+| `SPRING_R2DBC_PASSWORD`      | *""*                                                                                                                               |
 | `MYSQL_ALLOW_EMPTY_PASSWORD` | `yes`                                                                                                                              |
 | `MYSQL_DATABASE`             | `blackjack_db`                                                                                                                     |
 | `SPRING_DATA_MONGODB_URI`    | `mongodb+srv://blackjackuser:blackjackpass@cluster0.efdbcf5.mongodb.net/blackjack_db?retryWrites=true&w=majority&appName=Cluster0` |
 | `MONGO_URI`                  | `mongodb+srv://blackjackuser:blackjackpass@cluster0.efdbcf5.mongodb.net/blackjack_db?retryWrites=true&w=majority&appName=Cluster0` |
 | `MYSQL_URL`                  | `r2dbc:mysql://root:@mysql:3306/blackjack_db`                                                                                      |
 | `MYSQL_USER`                 | `root`                                                                                                                             |
-| `MYSQL_PASS`                 | *""*                                                                                                    |
+| `MYSQL_PASS`                 | *""*                                                                                                                               |
 
 </details>
-
-## 📤 How to Share and Deploy
-
-* Share the Render app URL: `https://blackjack-api-latest.onrender.com`
-* Share the Swagger UI URL: `https://blackjack-api-latest.onrender.com/swagger-ui.html`
-* Share the Docker Hub Image: `https://hub.docker.com/r/acocinas/blackjack-api`
-* Clone or fork the repository from GitHub to set up your own instance.
 
 ## 📢 Contributors
 
