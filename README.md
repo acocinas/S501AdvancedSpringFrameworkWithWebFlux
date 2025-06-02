@@ -36,6 +36,7 @@ Global exception handler (GlobalExceptionHandler) for clear responses:
 ## 📊 Swagger UI
 
 📍 Access the API via Swagger: `https://blackjack-api-latest.onrender.com/swagger-ui.html`
+[Direct to Swagger](https://blackjack-api-latest.onrender.com/swagger-ui.html)
 
 ## 🏅 Player Ranking
 
