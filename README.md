@@ -35,7 +35,7 @@ Global exception handler (GlobalExceptionHandler) for clear responses:
 
 ## 📊 Swagger UI
 
-📍 Access the API via Swagger once the container is running:
+📍 Once the containers are running, access the API documentation at:
 
 ```
 http://localhost:8080/swagger-ui.html
@@ -52,17 +52,27 @@ http://localhost:8080/swagger-ui.html
 * 🧪 JUnit & Mockito for tests
 * 🐘 Maven for build management
 
-## 🐳 Docker Image
+## 🐳 Docker Setup
 
-To build and run the image locally:
+### 🔥 Run with Docker Compose
+
+Clone the repository and in the root directory run:
 
 ```bash
-docker build -t blackjack-api:latest .
-docker run -p 8080:8080 blackjack-api:latest
+docker-compose up
 ```
+This will start:
+
+MySQL (on port 3307)
+
+MongoDB (on port 27017)
+
+Blackjack API (on port 8080)
+
+The Blackjack API will be available at http://localhost:8080, and the Swagger UI at http://localhost:8080/swagger-ui.html.
 
 <details>
-<summary>⚙️ Environment Variables (Click to expand)</summary>
+<summary>⚙️  Docker Compose Environment Variables (Click to expand)</summary>
 
 | Variable                     | Value                                                                                                                              |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -71,13 +81,63 @@ docker run -p 8080:8080 blackjack-api:latest
 | `SPRING_R2DBC_PASSWORD`      | *""*                                                                                                                               |
 | `MYSQL_ALLOW_EMPTY_PASSWORD` | `yes`                                                                                                                              |
 | `MYSQL_DATABASE`             | `blackjack_db`                                                                                                                     |
-| `SPRING_DATA_MONGODB_URI`    | `mongodb+srv://blackjackuser:blackjackpass@cluster0.efdbcf5.mongodb.net/blackjack_db?retryWrites=true&w=majority&appName=Cluster0` |
-| `MONGO_URI`                  | `mongodb+srv://blackjackuser:blackjackpass@cluster0.efdbcf5.mongodb.net/blackjack_db?retryWrites=true&w=majority&appName=Cluster0` |
-| `MYSQL_URL`                  | `r2dbc:mysql://root:@mysql:3306/blackjack_db`                                                                                      |
-| `MYSQL_USER`                 | `root`                                                                                                                             |
-| `MYSQL_PASS`                 | *""*                                                                                                                               |
+| `SPRING_DATA_MONGODB_URI`    | `mongodb://mongo:27017/blackjack_db` |
+</details>
+### 🛠 Manual Build and Run (Optional)
+To build and run the API locally (without Docker Compose):
+
+`docker build -t blackjack-api:latest .`
+
+`docker run -p 8080:8080 blackjack-api:latest`
+
+## 🔐 Using a `.env` File for Local Environment Variables
+
+If you cloned this repository and want to run the application **locally without Docker**, you can use a `.env` file to provide the required environment variables.
+
+### 📝 Steps to Set Up a `.env` File
+
+1️⃣ Create a `.env` file in the project root directory with the following content
+<details> <summary>⚙️ Environment Variables .env (Click to expand)</summary>
+  
+`SPRING_R2DBC_URL=r2dbc:mysql://localhost:3306/blackjack_db`
+  
+`SPRING_R2DBC_USERNAME=your_user`
+
+`SPRING_R2DBC_PASSWORD=your_password`
+
+`SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/blackjack_db`
+
+Replace your_user with your actual MySQL user your_password with your actual MySQL password (or leave it "" if you have no password).
 
 </details>
+
+2️⃣ Spring Boot reads environment variables but does not automatically load .env files. You need to load it manually before running the app.
+
+<details> <summary>🚀 Load the .env and Run Locally</summary>
+
+For Linux/MacOS:
+
+`export $(grep -v '^#' .env | xargs)`
+
+`./mvnw spring-boot:run`
+
+For Windows (PowerShell):
+
+`Get-Content .env | ForEach-Object {
+  if ($_ -match "^\s*([^=]+)\s*=\s*(.*)\s*$") {
+    [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
+  }
+}`
+
+`./mvnw spring-boot:run`
+
+This will load the environment variables and run the application with the correct database connections and configuration.
+</details>
+
+## ⚠️ Note
+This method is only for local development without Docker.
+
+Make sure your MySQL and MongoDB services are running locally with the specified ports and credentials.
 
 ## 📢 Contributors
 
