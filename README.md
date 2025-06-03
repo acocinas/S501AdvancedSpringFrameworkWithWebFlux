@@ -83,6 +83,7 @@ The Blackjack API will be available at http://localhost:8080, and the Swagger UI
 | `MYSQL_DATABASE`             | `blackjack_db`                                                                                                                     |
 | `SPRING_DATA_MONGODB_URI`    | `mongodb://mongo:27017/blackjack_db` |
 </details>
+
 ### 🛠 Manual Build and Run (Optional)
 To build and run the API locally (without Docker Compose):
 
@@ -113,7 +114,7 @@ Replace your_user with your actual MySQL user your_password with your actual MyS
 
 2️⃣ Spring Boot reads environment variables but does not automatically load .env files. You need to load it manually before running the app.
 
-<details> <summary>🚀 Load the .env and Run Locally</summary>
+<details> <summary>🚀 Load the .env and Run Locally(Click to expand)</summary>
 
 For Linux/MacOS:
 
